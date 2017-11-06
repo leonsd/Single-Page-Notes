@@ -1,0 +1,98 @@
+// This is a manifest file that'll be compiled into application.js, which will include all the files
+// listed below.
+//
+// Any JavaScript/Coffee file within this directory, lib/assets/javascripts, or any plugin's
+// vendor/assets/javascripts directory can be referenced here using a relative path.
+//
+// It's not advisable to add code directly here, but if you do, it'll appear at the bottom of the
+// compiled file. JavaScript code in this file should be added after the last require_* statement.
+//
+// Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
+// about supported directives.
+//
+//= require rails-ujs
+//= require jquery3
+//= require jquery_ujs
+//= require turbolinks
+//= require materialize
+//= require cocoon
+//= require_tree .
+
+$(document).ready(function() {
+  control      = 0;
+});
+
+$('.dropdown-button').dropdown({
+  inDuration: 300,
+  outDuration: 225,
+  constrainWidth: false,
+  hover: true,
+  gutter: 0,
+  belowOrigin: false,
+  alignment: 'left',
+  stopPropagation: false
+});
+
+$(document).on('click', '.done', function() {
+  var item_id = $(this).val();
+  var done    = $(this).prop('checked') ? true : false;
+
+  $.ajax({
+    url: '<%=Rails.application.routes.url_helpers.item_update_lists_path%>',
+    type: 'GET',
+    dataType: 'HTML',
+    data: { item_id: item_id,
+            done: done
+          },
+  })
+  .done(function(lists) {
+    $("#lists").html(lists);
+  });
+});
+
+$(document).on('click', '.color', function() {
+  var list_id = $(this).closest('li').attr('id');
+  var color = $(this).attr('id');
+
+  $.ajax({
+    url: '<%=Rails.application.routes.url_helpers.color_update_lists_path%>',
+    type: 'GET',
+    dataType: 'HTML',
+    data: { list_id: list_id,
+            color: color 
+          },
+  })
+  .done(function(lists) {
+    $("#lists").html(lists);
+  });
+});
+
+$(document).on('click', '.delete-item', function() {
+  var item_id = $(this).attr('id');
+
+  $.ajax({
+    url: '<%=Rails.application.routes.url_helpers.delete_item_lists_path%>',
+    type: 'GET',
+    dataType: 'HTML',
+    data: { item_id: item_id },
+  })
+  .done(function(lists) {
+    $("#lists").html(lists);
+  });
+});
+
+$(document).on('keyup', '.js-description', function() {
+  var input        = $(this).attr('id');
+  var description  = $(this).val();
+  var inputControl = $('.js-description');
+
+  if (description.length > 0 && control != input) {
+    control = input;
+    $('.js-add').click();
+  } else if (description.length == 0 && inputControl.length > 1 && control == input) {
+    var remove = $(this).closest('.nested-fields').find('.js-remove');
+    
+    control = input;
+    remove.click();
+  }
+});

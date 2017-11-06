@@ -1,0 +1,33 @@
+<div class="row">
+  <div class="col l8 m8 s12 offset-l2 offset-m2">
+    <div class="list-box">
+      <div class="list-header">
+        <span class="title">Nova Nota</span>
+      </div>
+      <%= simple_form_for(@list, remote: true) do |f| %>
+        <div class="list-body">
+          <%= f.error_notification %>
+
+          <div class="row">
+            <div class="input-field">
+              <%= f.input :title, label: 'Título' %>
+            </div>
+          </div>
+          <div id="items">
+            <%= f.simple_fields_for :items do |item| %>
+              <%= render partial: 'item_fields', locals: { f: item } %>
+            <% end %>
+            <div class="links">
+              <%= link_to_add_association 'Adicionar', f, :items, class: 'js-add hidden' %>
+            </div>
+          </div>
+        </div>
+        <div class="list-footer">
+          <div class="row">
+            <%= f.button :submit, "CONCLUIR", class: 'btn waves-effect waves-light blue darken-2 right' %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
