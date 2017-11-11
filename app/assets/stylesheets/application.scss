@@ -12,12 +12,53 @@
  *
  *= require_tree .
  *= require_self
+ *= require toastr_rails
  *= require material_icons
  */
- @import "materialize";
+@import "materialize";
+
+$white:           #fff;
+$grey-lighten-1:  #bdbdbd;
+$grey-lighten-2:  #e0e0e0;
+$grey-darken-2:   #616161;
+$amber-lighten-1: #ffca28;
+$blue-darken-2:   #1976d2;
+
+ main, footer {
+  padding-left: 280px;
+}
+
+@media only screen and (max-width : 992px) {
+  main, footer {
+    padding-left: 0;
+  }
+}
+
+.side-nav {
+  max-width: 280px;
+  margin-top: 68px;
+  box-shadow: none;
+}
+
+.container-fluid {
+  max-width: 85%;
+}
+
+ #notes {
+   margin-top: 30px;
+ }
+
+ nav {
+   padding: 0 15px;
+   background-color: $amber-lighten-1;
+ }
  
-.done {
+.complete {
   text-decoration: line-through;
+}
+
+#toast-container{
+  top: 0 !important;
 }
 
 .clearfix:after,
@@ -27,15 +68,12 @@
   clear: both;
 }
 
-.card .card-action {
-  border-top: 1px solid #1976D2;
-}
-
 .input-field label {
-  color: #1976D2;
+  color: $grey-lighten-1;
 }
  
-input:not([type]), input[type=text]:not(.browser-default),
+input:not([type]),
+input[type=text]:not(.browser-default),
 input[type=password]:not(.browser-default),
 input[type=email]:not(.browser-default),
 input[type=url]:not(.browser-default),
@@ -47,7 +85,18 @@ input[type=tel]:not(.browser-default),
 input[type=number]:not(.browser-default),
 input[type=search]:not(.browser-default),
 textarea.materialize-textarea{
-  border-bottom: 1px solid #1976D2;
+  border-bottom: 1px solid $grey-lighten-1;
+  background-color: transparent;
+  border-radius: 0;
+  outline: none;
+  height: 3rem;
+  width: 100%;
+  font-size: 1rem;
+  margin: 0;
+  padding: 0;
+  box-shadow: none;
+  box-sizing: content-box;
+  transition: all 0.3s;
 }
 
 input:not([type]):focus:not([readonly]),
@@ -63,17 +112,17 @@ input[type=tel]:not(.browser-default):focus:not([readonly]),
 input[type=number]:not(.browser-default):focus:not([readonly]),
 input[type=search]:not(.browser-default):focus:not([readonly]),
 textarea.materialize-textarea:focus:not([readonly]) {
-  border-bottom: 1px solid #1976D2;
-  box-shadow: 0 1px 0 0 #1976D2;
+  border-bottom: 1px solid $grey-lighten-1;
+  box-shadow: 0 1px 0 0 $grey-lighten-1;
 }
 
 [type="checkbox"].filled-in:checked + label:after {
-  background-color: #1976D2;
-  border-color: #5a5a5a;
+  background-color: $blue-darken-2;
+  border-color: $grey-darken-2;
 }
 
 .list-box {
-  background: #fff;
+  background: $white;
   max-width: 100%;
   padding: 10px;
   margin-bottom: 20px;
@@ -88,8 +137,8 @@ textarea.materialize-textarea:focus:not([readonly]) {
   font-weight: bolder;
 }
 
-.container .row {
-  margin: 0;
+.row {
+  margin-bottom: 10px;
 }
 
 .item {
@@ -98,4 +147,19 @@ textarea.materialize-textarea:focus:not([readonly]) {
 
 .hidden {
   display: none;
+}
+
+.side-nav li > a > i,
+.side-nav li > a > [class^="mdi-"],
+.side-nav li > a li > a > [class*="mdi-"],
+.side-nav li > a > i.material-icons {
+  margin: 0 10px 0 0;
+}
+
+.side-nav li > a {
+  padding: 0 15px;
+
+  &:hover {
+    background: $grey-lighten-2;
+  }
 }

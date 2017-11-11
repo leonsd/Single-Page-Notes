@@ -13,29 +13,37 @@
 //= require rails-ujs
 //= require jquery3
 //= require jquery_ujs
-//= require turbolinks
 //= require materialize
 //= require cocoon
+//= require toastr_rails
 //= require_tree .
 
 $(document).ready(function() {
-  control      = 0;
-});
+  control = 0;
 
-$('.dropdown-button').dropdown({
-  inDuration: 300,
-  outDuration: 225,
-  constrainWidth: false,
-  hover: true,
-  gutter: 0,
-  belowOrigin: false,
-  alignment: 'left',
-  stopPropagation: false
+  setupDropDown();
+
+  toastr.options = {
+    "positionClass": "toast-top-left",
+    "showDuration": "300",
+    "timeOut": "3000",
+    "showEasing": "swing",
+    "hideEasing": "linear",
+    "showMethod": "fadeIn",
+    "hideMethod": "fadeOut"
+  };
 });
 
 $(document).on('click', '.done', function() {
-  var item_id = $(this).val();
-  var done    = $(this).prop('checked') ? true : false;
+  var item_id;
+  var item = $(this).closest('.row');
+  var done = $(this).prop('checked') ? true : false;
+
+  if ($(this).prop('type') === 'checkbox') {
+    item_id = $(this).val();
+  } else {
+    item_id = $(this).closest('p').find('input').val();
+  }
 
   $.ajax({
     url: '<%=Rails.application.routes.url_helpers.item_update_lists_path%>',
@@ -47,6 +55,7 @@ $(document).on('click', '.done', function() {
   })
   .done(function(lists) {
     $("#lists").html(lists);
+    setupDropDown();
   });
 });
 
@@ -64,6 +73,7 @@ $(document).on('click', '.color', function() {
   })
   .done(function(lists) {
     $("#lists").html(lists);
+    setupDropDown();
   });
 });
 
@@ -78,6 +88,8 @@ $(document).on('click', '.delete-item', function() {
   })
   .done(function(lists) {
     $("#lists").html(lists);
+    setupDropDown();
+    flash('Item Apagado!');
   });
 });
 
@@ -96,3 +108,57 @@ $(document).on('keyup', '.js-description', function() {
     remove.click();
   }
 });
+
+function adicionarLista() {
+  $('#new_list').ajaxSubmit({
+    dataType: 'html',
+    success: processHtml
+  });
+
+  return false;
+}
+
+function apagarLista(list_id) {
+  $.ajax({
+    url: '<%=Rails.application.routes.url_helpers.list_destroy_lists_path%>',
+    type: 'get',
+    dataType: 'json',
+    data: { list_id: list_id },
+  })
+  .done(function(response) {
+    if (response) {
+      $('#' + list_id).fadeOut(300, function() { 
+        $(this).remove();
+        flash('Lista Apagada!');
+      });
+    }
+  });
+}
+
+function processHtml(data) {
+  var div = $('.list').closest('.row');
+
+  if ($(div).length == 0) {
+    div = $('#lists').find('.row');
+    div.prepend("<div id='' class='list'></div>");
+    div = $('.list').closest('.row');
+  } 
+
+  $(div).prepend(data).hide().fadeIn(1000);
+  setupDropDown();
+  flash('Lista Criada!');
+}
+
+function setupDropDown() {
+  $('.dropdown-button').dropdown();
+}
+
+function flash(text) {
+  Materialize.toast(text, 4000)
+}
+
+function flashWithAction(text) {
+  var $button       = '<button class="btn-flat toast-action">Desfazer</button>';
+  var $toastContent = $('<span>'+ text +'</span>').add($($button));
+  Materialize.toast($toastContent, 5000);
+}

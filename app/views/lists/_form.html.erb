@@ -1,16 +1,16 @@
 <div class="row">
-  <div class="col l8 m8 s12 offset-l2 offset-m2">
+  <div class="col l6 m6 s12 offset-l3 offset-m3">
     <div class="list-box">
       <div class="list-header">
         <span class="title">Nova Nota</span>
       </div>
-      <%= simple_form_for(@list, remote: true) do |f| %>
+      <%= simple_form_for(@list) do |f| %>
         <div class="list-body">
           <%= f.error_notification %>
 
           <div class="row">
             <div class="input-field">
-              <%= f.input :title, label: 'Título' %>
+              <%= f.input :title, label: 'Título', input_html: { autocomplete: "off" } %>
             </div>
           </div>
           <div id="items">
@@ -24,7 +24,7 @@
         </div>
         <div class="list-footer">
           <div class="row">
-            <%= f.button :submit, "CONCLUIR", class: 'btn waves-effect waves-light blue darken-2 right' %>
+            <%= link_to 'Adicionar', '#', onclick: 'adicionarLista()', class: 'btn waves-effect waves-light blue darken-2 right' %>
           </div>
         </div>
       <% end %>

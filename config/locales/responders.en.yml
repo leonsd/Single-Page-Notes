@@ -1,0 +1,12 @@
+en:
+  flash:
+    actions:
+      create:
+        notice: 'Lista Criada!'
+        # alert: '%{resource_name} could not be created.'
+      update:
+        notice: 'Lista Atualizada!'
+        # alert: '%{resource_name} could not be updated.'
+      destroy:
+        notice: 'Lista Apagada!'
+        # alert: '%{resource_name} could not be destroyed.'

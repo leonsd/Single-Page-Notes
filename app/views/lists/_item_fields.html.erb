@@ -1,7 +1,7 @@
 <div class="nested-fields">
   <div class="row">
     <div class="input-field">
-        <%= f.input :description, label: false, placeholder: 'Item da Lista', input_html: { class: "js-description" } %>
+        <%= f.input :description, label: false, placeholder: 'Item da Lista', input_html: { class: "js-description", autocomplete: "off" } %>
     </div>
     <%= link_to_remove_association 'remove', f, class: 'js-remove hidden' %>
   </div>

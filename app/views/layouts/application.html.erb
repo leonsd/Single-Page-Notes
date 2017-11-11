@@ -4,13 +4,42 @@
     <title>ToDo</title>
     <%= csrf_meta_tags %>
 
-    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_link_tag    'application', media: 'all' %>
+    <%= javascript_include_tag 'application' %>
   </head>
 
   <body class="grey lighten-4">
-    <div class="container">
-      <%= yield %>
-    </div>
+    <header>
+      <nav>
+        <div class="nav-wrapper">
+          <%= link_to material_icon.menu.md_24, '#', class: 'brand-logo menu grey-text text-darken-3' %>
+          <%#= link_to "Keep Notes", root_path, class: 'brand-logo grey-text text-darken-3' %>
+          <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a href="sass.html" class="grey-text text-darken-3">Sass</a></li>
+            <li><a href="badges.html"  class="grey-text text-darken-3">Components</a></li>
+            <li><a href="collapsible.html"  class="grey-text text-darken-3">JavaScript</a></li>
+          </ul>
+        </div>
+      </nav>
+      <ul id="slide-out" class="side-nav fixed grey lighten-4">
+        <li>
+          <%= link_to "#{material_icon.lightbulb_outline.md_24} Notas".html_safe, '#', class: 'grey-text- text-darken-2' %>
+        </li>
+        <li>
+          <%= link_to "#{material_icon.touch_app.md_24} Lembretes".html_safe, '#', class: 'grey-text- text-darken-2' %>
+        </li>
+      </ul>
+    </header>
+
+    <main>
+      <div class="container-fluid">
+        <%= yield %>
+      </div>
+    </main>
+
+    <footer>
+    </footer>
+    
+    <script src="https://cdn.jsdelivr.net/gh/jquery-form/form@4.2.2/dist/jquery.form.min.js" integrity="sha384-FzT3vTVGXqf7wRfy8k4BiyzvbNfeYjK+frTVqZeNDFl8woCbF0CYG6g2fMEFFo/i" crossorigin="anonymous"></script>
   </body>
 </html>

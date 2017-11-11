@@ -1,5 +1,6 @@
 class ListsController < ApplicationController
-  before_action :set_list, only: [:show, :edit, :update, :destroy]
+  respond_to :html, :js
+  before_action :set_list, only: [:edit, :update]
 
   def index
     new
@@ -7,10 +8,11 @@ class ListsController < ApplicationController
   end
 
   def item_update
-    item = Item.find(params[:item_id])
+    item  = Item.find(params[:item_id])
+    # lista = item.list
     item.done = params[:done]
     item.save!
-
+ 
     select_lists
 
     render partial: 'lists', layout: false
@@ -35,9 +37,6 @@ class ListsController < ApplicationController
     render partial: 'lists', layout: false
   end
 
-  def show
-  end
-
   def new
     @list = List.new
     @list.items.build
@@ -49,26 +48,25 @@ class ListsController < ApplicationController
   def create
     @list = List.new(list_params)
 
-    respond_to do |format|
-      if @list.save
-        format.html { redirect_to lists_path, notice: 'Lista Criada!' }
-      else
-        format.html { render :new }
-      end
+    if @list.save
+      list = List.last
+
+      render partial: 'list', locals: { list: list }, layout: false
+    else
+      render :new
     end
   end
 
-  def destroy
+  def list_destroy
+    @list = List.find(params[:list_id])
     @list.destroy
-
-    respond_to do |format|
-      format.html { redirect_to lists_url, notice: 'Lista Apagada!' }
-    end
+    
+    render json: true
   end
 
   private
     def select_lists
-      @lists = List.includes(:items).order('items.done', 'items.created_at')
+      @lists = List.includes(:items).order('items.done', 'items.created_at DESC')
     end
 
     def set_list

@@ -18,52 +18,8 @@
 
 <div class="row">
   <% @lists.each do |list| %>
-    <div class="col l4 m8 s12 offset-m2">
-      <div class="list-box <%= list.color %>">
-        <div class="list-header">
-          <span class="title"><%= list.title %></span>
-          <%= link_to material_icon.close.md_18, list, remote: true,  method: :delete, class: 'right black-text' %>
-        </div> 
-        <div class="list-body">
-          <% list.items.each do |item| %>
-            <% if item.done %>
-              <p>
-                <%= check_box_tag "done-#{item.id}", item.id, item.done, class: 'filled-in done' %>
-                <%= label_tag "done-#{item.id}", item.description, class: 'black-text done' %>
-                <%= link_to material_icon.delete.md_18, '#',id: item.id, class: 'right red-text delete-item' %>
-                <%= link_to material_icon.edit.md_18, '#', id: item.id, class: 'right blue-text' %>
-              </p>
-            <% else %>
-              <p>
-                <%= check_box_tag "done-#{item.id}", item.id, item.done, class: 'filled-in done' %>
-                <%= label_tag "done-#{item.id}", item.description, class: 'black-text' %>
-                <%= link_to material_icon.delete.md_18, '#', id: item.id, class: 'right red-text delete-item' %>
-                <%= link_to material_icon.edit.md_18, '#', id: item.id, class: 'right blue-text' %>
-              </p>
-            <% end %>
-          <% end %>
-        </div>
-        <div class="list-footer">
-          <div class="row">
-            <%= link_to material_icon.plus_one.md_18, '#', class: 'grey-text text-darken-2', data: { toggle: 'tooltip', title: 'Colaborador' } %>
-            <%= link_to material_icon.color_lens.md_18, '#', class: 'dropdown-button grey-text text-darken-2', data: { toggle: 'tooltip', title: 'Alterar cor', activates: "dropdown-color-#{list.id}", beloworigin: 'true' } %>
-            <ul id="dropdown-color-<%= list.id %>" class='dropdown-content'>
-              <li id="<%= list.id %>" class="item">
-                <%= link_to material_icon.panorama_fish_eye.md_18, '#', id: "blue lighten-3", class: 'color blue-text' %>
-              </li>
-              <li id="<%= list.id %>" class="item">
-                <%= link_to material_icon.panorama_fish_eye.md_18, '#', id: "white", class: 'color grey-text' %>
-              </li>
-              <li id="<%= list.id %>" class="item">
-                <%= link_to material_icon.panorama_fish_eye.md_18, '#', id: "red lighten-3", class: 'color red-text' %>
-              </li>
-              <li id="<%= list.id %>" class="item">
-                <%= link_to material_icon.panorama_fish_eye.md_18, '#', id: "yellow", class: 'color yellow-text' %>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>       
+    <div id="<%= list.id %>" class="list">
+      <%= render partial: 'list', locals: { list: list } %>
     </div>
   <% end %>
 </div>
