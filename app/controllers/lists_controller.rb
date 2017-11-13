@@ -9,7 +9,6 @@ class ListsController < ApplicationController
 
   def item_update
     item  = Item.find(params[:item_id])
-    # lista = item.list
     item.done = params[:done]
     item.save!
  
@@ -52,8 +51,6 @@ class ListsController < ApplicationController
       list = List.last
 
       render partial: 'list', locals: { list: list }, layout: false
-    else
-      render :new
     end
   end
 

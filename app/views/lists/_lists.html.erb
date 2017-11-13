@@ -1,25 +1,5 @@
-<% @lists.each do |list| %>
-  <% list.items do |item| %>
-    <% if item.done %>
-      <p>
-      <%= check_box_tag 'done', item.id, item.done %>
-      <span class="done">Description: <%= item.description %></span>
-      <%= link_to 'Apagar', item, method: :delete %>
-      </p>
-    <% else %>
-      <p>
-      <%= check_box_tag 'done', item.id, item.done %>
-      <span>Description: <%= item.description %></span>
-      <%= link_to 'Apagar', item, remote: true, method: :delete %>
-      </p>
-    <% end %>
-  <% end %>
-<% end %>
-
 <div class="row">
   <% @lists.each do |list| %>
-    <div id="<%= list.id %>" class="list">
-      <%= render partial: 'list', locals: { list: list } %>
-    </div>
+    <%= render partial: 'list', locals: { list: list } %>
   <% end %>
 </div>

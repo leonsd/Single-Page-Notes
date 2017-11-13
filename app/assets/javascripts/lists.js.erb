@@ -1,37 +1,7 @@
-// This is a manifest file that'll be compiled into application.js, which will include all the files
-// listed below.
-//
-// Any JavaScript/Coffee file within this directory, lib/assets/javascripts, or any plugin's
-// vendor/assets/javascripts directory can be referenced here using a relative path.
-//
-// It's not advisable to add code directly here, but if you do, it'll appear at the bottom of the
-// compiled file. JavaScript code in this file should be added after the last require_* statement.
-//
-// Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
-// about supported directives.
-//
-//= require rails-ujs
-//= require jquery3
-//= require jquery_ujs
-//= require materialize
-//= require cocoon
-//= require toastr_rails
-//= require_tree .
-
 $(document).ready(function() {
   control = 0;
-
+  
   setupDropDown();
-
-  toastr.options = {
-    "positionClass": "toast-top-left",
-    "showDuration": "300",
-    "timeOut": "3000",
-    "showEasing": "swing",
-    "hideEasing": "linear",
-    "showMethod": "fadeIn",
-    "hideMethod": "fadeOut"
-  };
 });
 
 $(document).on('click', '.done', function() {
@@ -47,8 +17,8 @@ $(document).on('click', '.done', function() {
 
   $.ajax({
     url: '<%=Rails.application.routes.url_helpers.item_update_lists_path%>',
-    type: 'GET',
-    dataType: 'HTML',
+    type: 'get',
+    dataType: 'html',
     data: { item_id: item_id,
             done: done
           },
@@ -60,13 +30,13 @@ $(document).on('click', '.done', function() {
 });
 
 $(document).on('click', '.color', function() {
-  var list_id = $(this).closest('li').attr('id');
-  var color = $(this).attr('id');
+  var list_id = $(this).attr('id');
+  var color = $(this).find('a').attr('id');
 
   $.ajax({
     url: '<%=Rails.application.routes.url_helpers.color_update_lists_path%>',
-    type: 'GET',
-    dataType: 'HTML',
+    type: 'get',
+    dataType: 'html',
     data: { list_id: list_id,
             color: color 
           },
@@ -82,8 +52,8 @@ $(document).on('click', '.delete-item', function() {
 
   $.ajax({
     url: '<%=Rails.application.routes.url_helpers.delete_item_lists_path%>',
-    type: 'GET',
-    dataType: 'HTML',
+    type: 'get',
+    dataType: 'html',
     data: { item_id: item_id },
   })
   .done(function(lists) {
@@ -93,15 +63,25 @@ $(document).on('click', '.delete-item', function() {
   });
 });
 
+$(document).on('focus', '.js-title', function() {
+  var $add           = $('.js-add');
+  var $description   = $('.js-description');
+
+  if ($description.length == 0) {
+    $add.click();
+  }
+});
+
 $(document).on('keyup', '.js-description', function() {
-  var input        = $(this).attr('id');
-  var description  = $(this).val();
-  var inputControl = $('.js-description');
+  var $add          = $('.js-add');
+  var input         = $(this).attr('id');
+  var description   = $(this).val();
+  var $inputControl = $('.js-description');
 
   if (description.length > 0 && control != input) {
     control = input;
-    $('.js-add').click();
-  } else if (description.length == 0 && inputControl.length > 1 && control == input) {
+    $add.click();
+  } else if (description.length == 0 && $inputControl.length > 1 && control == input) {
     var remove = $(this).closest('.nested-fields').find('.js-remove');
     
     control = input;
@@ -110,15 +90,20 @@ $(document).on('keyup', '.js-description', function() {
 });
 
 function adicionarLista() {
-  $('#new_list').ajaxSubmit({
-    dataType: 'html',
-    success: processHtml
-  });
+  var title        = $('.js-title').val();
+  var $description = $('.js-description');
 
-  return false;
+  if (!(title.trim() == "" || ($description.length == 1 && $description.val().trim() == ""))) {
+    $('#new_list').ajaxSubmit({
+      dataType: 'html',
+      success: processHtml
+    });
+  
+    return limparForm();
+  }
 }
 
-function apagarLista(list_id) {
+function apagarLista(element, list_id) {
   $.ajax({
     url: '<%=Rails.application.routes.url_helpers.list_destroy_lists_path%>',
     type: 'get',
@@ -126,10 +111,12 @@ function apagarLista(list_id) {
     data: { list_id: list_id },
   })
   .done(function(response) {
+    var $list = element.closest('.list');
+
     if (response) {
-      $('#' + list_id).fadeOut(300, function() { 
+      $($list).fadeOut(300, function() { 
         $(this).remove();
-        flash('Lista Apagada!');
+        flashWithAction('Lista Apagada!')
       });
     }
   });
@@ -137,20 +124,22 @@ function apagarLista(list_id) {
 
 function processHtml(data) {
   var div = $('.list').closest('.row');
-
   if ($(div).length == 0) {
     div = $('#lists').find('.row');
     div.prepend("<div id='' class='list'></div>");
     div = $('.list').closest('.row');
   } 
 
-  $(div).prepend(data).hide().fadeIn(1000);
+  $(div).prepend(data);
+  $('.list:first').hide().fadeIn(300);
   setupDropDown();
   flash('Lista Criada!');
 }
 
 function setupDropDown() {
-  $('.dropdown-button').dropdown();
+  $('.dropdown-button').dropdown({
+    hover: true
+  });
 }
 
 function flash(text) {
@@ -160,5 +149,23 @@ function flash(text) {
 function flashWithAction(text) {
   var $button       = '<button class="btn-flat toast-action">Desfazer</button>';
   var $toastContent = $('<span>'+ text +'</span>').add($($button));
-  Materialize.toast($toastContent, 5000);
+
+  Materialize.toast($toastContent, 4000);
+}
+
+function limparForm() {
+  var fieldLength = 0;
+
+  $('#list_title').val('');
+  $('.js-description').val('');
+
+  $('.js-remove').each(function() {
+    fieldLength = $('.js-remove').length;
+
+    if (fieldLength == 1) {
+      return false;
+    }
+
+    $(this).click();
+  });
 }

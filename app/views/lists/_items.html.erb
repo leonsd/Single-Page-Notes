@@ -1,24 +1,12 @@
 <% list.items.each do |item| %>
-  <% if item.done %>
-    <div class="row">
-      <div class="col s10">
-        <%= check_box_tag "done-#{item.id}", item.id, item.done, class: 'filled-in done' %>
-        <%= label_tag "done-#{item.id}", item.description, class: 'black-text complete' %>
-      </div>
+  <div class="row">
+    <div class="col s10">
+      <%= check_box_tag "done-#{item.id}", item.id, item.done, class: 'filled-in done' %>
+      <%= label_tag "done-#{item.id}", item.description, class: item.done ? 'black-text complete' : 'black-text' %>
+    </div>
     <div class="col s2">
       <%= link_to material_icon.delete.md_18, '#',id: item.id, class: 'right red-text delete-item' %>
       <%= link_to material_icon.edit.md_18, '#', id: item.id, class: 'right blue-text modal-trigger' %>
     </div>
-    <% else %>
-    <div class="row">
-      <div class="col s10">
-        <%= check_box_tag "done-#{item.id}", item.id, item.done, class: 'filled-in done' %>
-        <%= label_tag "done-#{item.id}", item.description, class: 'black-text' %>
-      </div>
-      <div class="col s2">
-        <%= link_to material_icon.delete.md_18, '#',id: item.id, class: 'right red-text delete-item' %>
-        <%= link_to material_icon.edit.md_18, '#', id: item.id, class: 'right blue-text modal-trigger' %>
-      </div>
-    </div>
-  <% end %>
+  </div>
 <% end %>
