@@ -2,6 +2,7 @@ $(document).ready(function() {
   control = 0;
   
   setupDropDown();
+  $(".button-collapse").sideNav();
 });
 
 $(document).on('click', '.done', function() {
@@ -138,7 +139,8 @@ function processHtml(data) {
 
 function setupDropDown() {
   $('.dropdown-button').dropdown({
-    hover: true
+    hover:       true,
+    belowOrigin: true
   });
 }
 

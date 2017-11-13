@@ -12,7 +12,7 @@
     <header>
       <nav>
         <div class="nav-wrapper">
-          <%#= link_to material_icon.menu.md_24, '#', class: 'brand-logo menu grey-text text-darken-3' %>
+          <%= link_to material_icon.menu.md_24, '#', class: 'menu button-collapse grey-text text-darken-3', data: { activates: 'slide-out' } %>
           <%= link_to "SP Notes", root_path, class: 'brand-logo grey-text text-darken-3' %>
           <ul id="nav-mobile" class="right hide-on-med-and-down">
             <li><%= link_to material_icon.refresh.md_24, '#', class: 'grey-text text-darken-2' %></li>

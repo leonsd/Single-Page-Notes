@@ -162,3 +162,14 @@ textarea.materialize-textarea:focus:not([readonly]) {
     background: $grey-lighten-2;
   }
 }
+
+.menu {
+  display: none;  
+}
+
+@media (max-width: 992px) {
+  .menu {
+    display: inline-block;
+    float: left;
+  }
+}
