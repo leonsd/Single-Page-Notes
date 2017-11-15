@@ -38,7 +38,7 @@ class ListsController < ApplicationController
 
   def new
     @list = List.new
-    @list.items.build
+    @list.user_id = current_user.id
   end
 
   def edit
@@ -46,24 +46,47 @@ class ListsController < ApplicationController
 
   def create
     @list = List.new(list_params)
+    @list.user_id = current_user.id
 
     if @list.save
-      list = List.last
+      list = List.where(user_id: current_user.id).last
 
       render partial: 'list', locals: { list: list }, layout: false
     end
   end
 
+  def notes
+    new
+    select_lists
+
+    render :index, layout: false
+  end
+
+  def trash
+    @lists = List.where(user_id: current_user.id).where(status: false)
+    
+    render partial: 'lists', layout: false
+  end
+
   def list_destroy
     @list = List.find(params[:list_id])
-    @list.destroy
+    
+    if params[:rollback]
+      @list.status = true
+    else
+      @list.status = false
+    end
+
+    @list.save
     
     render json: true
   end
 
   private
     def select_lists
-      @lists = List.includes(:items).order('items.done', 'items.created_at DESC')
+      @lists = List.includes(:items)
+                   .where(status: true)
+                   .order('items.done', 'items.created_at desc')
     end
 
     def set_list

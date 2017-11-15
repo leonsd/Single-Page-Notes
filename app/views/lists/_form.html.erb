@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col l6 m6 s12 offset-l3 offset-m3">
+  <div class="col l6 m8 s12 offset-l2 offset-m2">
     <div class="list-box">
       <div class="list-header">
         <span class="title">Nova Nota</span>
@@ -10,7 +10,7 @@
 
           <div class="row">
             <div class="input-field">
-              <%= f.input :title, label: 'Título', input_html: { class: 'js-title', autocomplete: "off" } %>
+              <%= f.input :title, label: false, input_html: { class: 'js-title', placeholder: 'Título', autocomplete: "off" } %>
             </div>
           </div>
           <div id="items">

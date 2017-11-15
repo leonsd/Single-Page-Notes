@@ -10,10 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171105002131) do
+ActiveRecord::Schema.define(version: 20171113234209) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "collaborators", force: :cascade do |t|
+    t.bigint "list_id"
+    t.bigint "user_id"
+    t.boolean "accept"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["list_id"], name: "index_collaborators_on_list_id"
+    t.index ["user_id"], name: "index_collaborators_on_user_id"
+  end
 
   create_table "items", force: :cascade do |t|
     t.string "description"
@@ -29,7 +39,29 @@ ActiveRecord::Schema.define(version: 20171105002131) do
     t.string "color"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "status", default: true
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_lists_on_user_id"
   end
 
+  create_table "users", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer "sign_in_count", default: 0, null: false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.inet "current_sign_in_ip"
+    t.inet "last_sign_in_ip"
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  end
+
+  add_foreign_key "collaborators", "lists"
+  add_foreign_key "collaborators", "users"
   add_foreign_key "items", "lists"
 end

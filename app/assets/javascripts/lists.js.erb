@@ -2,7 +2,7 @@ $(document).ready(function() {
   control = 0;
   
   setupDropDown();
-  $(".button-collapse").sideNav();
+  setupSideNav();
 });
 
 $(document).on('click', '.done', function() {
@@ -90,6 +90,27 @@ $(document).on('keyup', '.js-description', function() {
   }
 });
 
+$(document).on('click', '.toast-action', function() {
+  var toastElement = $(this).closest('.toast');
+  toastElement.fadeOut(200, function() { 
+    $(this).remove();
+  });
+});
+
+function rollback(list_id) {
+  $.ajax({
+    type: "get",
+    url: "<%=Rails.application.routes.url_helpers.list_destroy_lists_path%>",
+    data: { list_id: list_id,
+             rollback: true 
+          },
+    dataType: "json",
+    success: function (response) {
+      $('.view-notes').click();
+    }
+  });
+}
+
 function adicionarLista() {
   var title        = $('.js-title').val();
   var $description = $('.js-description');
@@ -117,7 +138,7 @@ function apagarLista(element, list_id) {
     if (response) {
       $($list).fadeOut(300, function() { 
         $(this).remove();
-        flashWithAction('Lista Apagada!')
+        flashWithAction('Lista Apagada!', list_id)
       });
     }
   });
@@ -144,12 +165,16 @@ function setupDropDown() {
   });
 }
 
+function setupSideNav() {
+  $(".button-collapse").sideNav();
+}
+
 function flash(text) {
   Materialize.toast(text, 4000)
 }
 
-function flashWithAction(text) {
-  var $button       = '<button class="btn-flat toast-action">Desfazer</button>';
+function flashWithAction(text, id) {
+  var $button       = '<button class="btn-flat toast-action" onclick="rollback('+ id +')">Desfazer</button>';
   var $toastContent = $('<span>'+ text +'</span>').add($($button));
 
   Materialize.toast($toastContent, 4000);
@@ -159,6 +184,7 @@ function limparForm() {
   var fieldLength = 0;
 
   $('#list_title').val('');
+  $('#list_title').focus();
   $('.js-description').val('');
 
   $('.js-remove').each(function() {
@@ -169,5 +195,33 @@ function limparForm() {
     }
 
     $(this).click();
+  });
+}
+
+function viewNotes() {
+  $('#notes').html('');
+  
+  $.ajax({
+    type: "get",
+    url: "<%=Rails.application.routes.url_helpers.notes_lists_path%>",
+    dataType: "html",
+    success: function (response) {
+      $('#notes').html(response);
+      setupDropDown();
+    }
+  });
+}
+
+function viewTrash() {
+  $('#notes').html('');
+
+  $.ajax({
+    type: "get",
+    url: "<%=Rails.application.routes.url_helpers.trash_lists_path%>",
+    dataType: "html",
+    success: function (response) {
+      $('#notes').html(response);
+      setupDropDown();
+    }
   });
 }
