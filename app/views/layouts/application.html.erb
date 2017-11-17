@@ -19,14 +19,14 @@
                 <%= link_to "SP Notes", root_path, class: 'brand-logo grey-text text-darken-3' %>
               </div>
               <div class="col s6 m4 l4 offset-s2 offset-m2 offset-l2">
-                <form>
+                <%= form_tag(lists_path, method: :get, class: 'search') do %>
                   <div class="input-field">
-                    <%= search_field_tag :keyword, nil, id: 'search', placeholder: 'Pesquisar' %>
+                    <%= search_field_tag :keyword, params[:keyword], id: 'search', placeholder: 'Pesquisar', autocomplete: 'off' %>
                     <label for="search">
                       <%= material_icon.search.md_24 %>
                     </label>
                   </div>
-                </form>
+                <% end %>
               </div>
               <div class="col s4 m4 l4">
                 <ul class="right">
@@ -48,7 +48,7 @@
           <%= link_to "#{material_icon.touch_app.md_24} Lembretes".html_safe, '#', class: 'grey-text- text-darken-2' %>
         <div class="divider"></div>
         <li>
-          <%= link_to "#{material_icon.delete.md_24} Lixeira".html_safe, '#', onclick: "viewTrash()", class: 'grey-text- text-darken-2' %>
+          <%= link_to "#{material_icon.delete.md_24} Lixeira".html_safe, trash_lists_path, onclick: "viewTrash(this)", remote: true, class: 'grey-text- text-darken-2' %>
         </li>
       </ul>
     </header>
@@ -58,7 +58,7 @@
         <%= yield %>
       </div>
     </main>
-
+    
     <footer>
     </footer>
     

@@ -3,6 +3,7 @@ $(document).ready(function() {
   
   setupDropDown();
   setupSideNav();
+  $('.modal').modal();
 });
 
 $(document).on('click', '.done', function() {
@@ -23,10 +24,10 @@ $(document).on('click', '.done', function() {
     data: { item_id: item_id,
             done: done
           },
-  })
-  .done(function(lists) {
-    $("#lists").html(lists);
-    setupDropDown();
+    success: function (response) {
+      $("#lists").html(response);
+      setupDropDown();  
+    }
   });
 });
 
@@ -41,10 +42,10 @@ $(document).on('click', '.color', function() {
     data: { list_id: list_id,
             color: color 
           },
-  })
-  .done(function(lists) {
-    $("#lists").html(lists);
-    setupDropDown();
+    success: function (response) {
+      $("#lists").html(response);
+      setupDropDown(); 
+    }
   });
 });
 
@@ -56,11 +57,11 @@ $(document).on('click', '.delete-item', function() {
     type: 'get',
     dataType: 'html',
     data: { item_id: item_id },
-  })
-  .done(function(lists) {
-    $("#lists").html(lists);
-    setupDropDown();
-    flash('Item Apagado!');
+    success: function (response) {
+      $("#lists").html(response);
+      setupDropDown();
+      flash('Item Apagado!'); 
+    }
   });
 });
 
@@ -97,16 +98,21 @@ $(document).on('click', '.toast-action', function() {
   });
 });
 
+$(document).on('click', '.modal-trigger', function() {
+  // var id  = $(this).closest('.list').attr('id');
+  // var url = $(this).attr('href');
+  // $('.modal-content').load(url + "?id=" + id);
+  $('#modal-list').modal('open');
+});
+
 function rollback(list_id) {
   $.ajax({
+    url: "<%=Rails.application.routes.url_helpers.rollback_list_lists_path%>",
     type: "get",
-    url: "<%=Rails.application.routes.url_helpers.list_destroy_lists_path%>",
-    data: { list_id: list_id,
-             rollback: true 
-          },
-    dataType: "json",
+    dataType: "html",
+    data: { list_id: list_id },
     success: function (response) {
-      $('.view-notes').click();
+      $('#lists > .row').prepend(response);
     }
   });
 }
@@ -199,8 +205,6 @@ function limparForm() {
 }
 
 function viewNotes() {
-  $('#notes').html('');
-  
   $.ajax({
     type: "get",
     url: "<%=Rails.application.routes.url_helpers.notes_lists_path%>",
@@ -212,16 +216,17 @@ function viewNotes() {
   });
 }
 
-function viewTrash() {
-  $('#notes').html('');
+function viewTrash(button) {
+  $('#notes').load($(button).attr('href'));
+  setupDropDown();
 
-  $.ajax({
-    type: "get",
-    url: "<%=Rails.application.routes.url_helpers.trash_lists_path%>",
-    dataType: "html",
-    success: function (response) {
-      $('#notes').html(response);
-      setupDropDown();
-    }
-  });
+  // $.ajax({
+  //   type: "get",
+  //   url: "<%=Rails.application.routes.url_helpers.trash_lists_path%>",
+  //   dataType: "html",
+  //   success: function (response) {
+  //     $('#notes').html(response);
+  //     setupDropDown();
+  //   }
+  // });
 }

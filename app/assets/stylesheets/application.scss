@@ -55,6 +55,10 @@ input[type="search"] {
    padding: 0 15px;
    background-color: $amber-lighten-1;
  }
+
+ nav .brand-logo {
+   font-size: 1.625rem;
+ }
  
 .complete {
   text-decoration: line-through;
@@ -119,6 +123,7 @@ textarea.materialize-textarea:focus:not([readonly]) {
 
 input[type=search]:not(.browser-default) {
   margin-top: 10px;
+  border-radius: 4px;
   background-color: rgba($color: $yellow, $alpha: .5);
 }
 
@@ -127,8 +132,8 @@ input[type=search]:not(.browser-default) {
 }
 
 input[type=search]:not(.browser-default):focus:not([readonly]) {
-  border-bottom: 1px solid $amber-lighten-1;
-  box-shadow: 0 1px 0 0 $amber-lighten-1;
+  border-bottom: none;
+  box-shadow: none;
 }
 
 .input-field input[type=search]:focus + label i {
