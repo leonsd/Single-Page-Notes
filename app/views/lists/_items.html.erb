@@ -1,12 +1,12 @@
-<% list.items.each do |item| %>
+<% list.items.order(done: :asc).each do |item| %>
   <div class="row">
     <div class="col s9">
       <%= check_box_tag "done-#{item.id}", item.id, item.done, class: 'filled-in done' %>
       <%= label_tag "done-#{item.id}", item.description, class: item.done ? 'black-text complete' : 'black-text' %>
     </div>
     <div class="col s3">
-      <%= link_to material_icon.delete.md_18, '#',id: item.id, class: 'right red-text delete-item' %>
-      <%= link_to material_icon.edit.md_18, '#', id: item.id, class: 'right blue-text modal-trigger' %>
+      <%= link_to material_icon.delete.md_18, '#', id: item.id, class: 'right red-text delete-item' %>
+      <%= link_to material_icon.edit.md_18, '#', id: item.id, class: 'right blue-text edit-item' %>
     </div>
   </div>
 <% end %>

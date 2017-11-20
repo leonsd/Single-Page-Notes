@@ -3,12 +3,13 @@ Rails.application.routes.draw do
   root 'lists#index'
 
   devise_for :users do
-    delete "/logout" => "devise/sessions#destroy", :as => :destroy_user_session
+    get "/logout" => "devise/sessions#destroy", :as => :destroy_user_session
   end
 
   resources :users
   
   resources :lists do
+    get 'paginate',      on: :collection
     get 'list_destroy',  on: :collection
     get 'rollback_list', on: :collection
     get 'item_update',   on: :collection
@@ -16,5 +17,6 @@ Rails.application.routes.draw do
     get 'delete_item',   on: :collection
     get 'notes',         on: :collection
     get 'trash',         on: :collection
+    get 'search',        on: :collection
   end
 end

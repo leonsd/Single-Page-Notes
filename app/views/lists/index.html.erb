@@ -1,11 +1,28 @@
-<div id="notes">
-  <%= render template: 'lists/new' %>
-
-  <div id="lists">
-    <%= render 'lists' %>
+<div class="row">
+  <div class="col l1 m1">
+    <ul id="slide-out" class="side-nav fixed grey lighten-4">
+      <li>
+        <%= link_to "#{material_icon.lightbulb_outline.md_24} Notas".html_safe, '#', onclick: 'viewNotes()', class: 'view-notes grey-text- text-darken-2' %>
+      </li>
+      <li>
+        <%= link_to "#{material_icon.touch_app.md_24} Lembretes".html_safe, '#', class: 'grey-text- text-darken-2' %>
+      <div class="divider"></div>
+      <li>
+        <%= link_to "#{material_icon.delete.md_24} Lixeira".html_safe, trash_lists_path, onclick: "viewTrash(this)", remote: true, class: 'grey-text- text-darken-2' %>
+      </li>
+    </ul>
   </div>
-</div>
+  <div class="col l11 m11 s12">
+    <div id="notes">
+      <%= render template: 'lists/new' %>
 
-<div id="modal-list" class="modal">
-  <div class="modal-content"></div>
+      <div id="lists">
+        <%= render 'lists' %>
+      </div>
+    </div>
+
+    <div id="modal-list" class="modal">
+      <div class="modal-content"></div>
+    </div>
+  </div>
 </div>

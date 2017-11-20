@@ -1,5 +1,5 @@
-<div class="row">
-  <% @lists.each do |list| %>
+<% @lists.each do |list| %>
+  <div class="row">
     <%= render partial: 'list', locals: { list: list } %>
-  <% end %>
-</div>
+  </div>
+<% end %>

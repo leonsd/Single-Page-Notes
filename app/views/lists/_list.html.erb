@@ -1,5 +1,5 @@
 <div id="<%= list.id %>" class="list">
-  <div class="col l4 m8 s12 offset-m2">
+  <div class="col l5 m8 s12 offset-m2 offset-l2">
     <div class="list-box <%= list.color %>">
       <div class="list-header">
         <div class="row">
@@ -7,7 +7,7 @@
             <span class="title"><%= list.title %></span>
           </div>
           <div class="col s2">
-            <%= link_to material_icon.close.md_18, '#', onclick: "apagarLista(this, #{list.id})", class: 'right black-text' %>
+            <%= link_to material_icon.close.md_18, '#', onclick: "apagarLista(this, #{list.id})", remote: true, class: 'btn-delete-list right black-text' %>
           </div>
         </div>
       </div> 
@@ -18,8 +18,8 @@
       </div>
       <div class="list-footer">
         <div class="row">
-          <%= link_to material_icon.plus_one.md_18, '#modal-list', remote: true, class: 'tooltipped modal-trigger grey-text text-darken-2', data: { toggle: 'tooltip', tooltip: 'Adicionar Colaborador', position: 'bottom', delay: '25' } %>
-          <%= link_to material_icon.color_lens.md_18, '#', class: 'dropdown-button grey-text text-darken-2', data: { toggle: 'tooltip', tooltip: 'Alterar cor', position: 'left', delay: '50', activates: "dropdown-color-#{list.id}", beloworigin: 'true' } %>
+          <%= link_to material_icon.plus_one.md_18, "#modal-list", onclick: "adicionarColaborador(#{list.id})", remote: true, class: 'tooltipped modal-trigger btn-collaborator grey-text text-darken-2', data: { toggle: 'tooltip', tooltip: 'Adicionar Colaborador', position: 'bottom', delay: '25' } %>
+          <%= link_to material_icon.color_lens.md_18, '#', class: 'dropdown-button btn-color grey-text text-darken-2', data: { toggle: 'tooltip', tooltip: 'Alterar cor', position: 'left', delay: '25', activates: "dropdown-color-#{list.id}", beloworigin: 'true' } %>
           <ul id="dropdown-color-<%= list.id %>" class='dropdown-content'>
             <li id="<%= list.id %>" class="item color">
               <%= link_to material_icon.panorama_fish_eye.md_18, '#', id: "blue lighten-3", class: 'blue-text' %>

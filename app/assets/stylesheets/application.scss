@@ -31,8 +31,9 @@ $blue-darken-2:   #1976d2;
 
 .side-nav {
   max-width: 280px;
-  margin-top: 68px;
+  padding-top: 68px;
   box-shadow: none;
+  z-index: 10;
 }
 
 input[type="search"] {
@@ -208,11 +209,10 @@ nav .input-field label {
 @media (max-width: 1025px) {
   .menu {
     display: inline-block !important;
-    float: left;
   }
 
-  #slide-out {
-    display: none;
+  .side-nav {
+    z-index: 1000;
   }
 
   main, footer {

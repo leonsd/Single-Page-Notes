@@ -3,7 +3,48 @@ $(document).ready(function() {
   
   setupDropDown();
   setupSideNav();
-  $('.modal').modal();
+  setupModal();
+});
+
+// $(document).on('mouseover', '.list-box', function() {
+//   $(this).find('.btn-delete-list').removeClass('hidden');
+//   $(this).find('.btn-collaborator').removeClass('hidden');
+//   $(this).find('.btn-color').removeClass('hidden');
+//   $(this).find('.delete-item').removeClass('hidden');
+//   $(this).find('.edit-item').removeClass('hidden');
+// });
+
+// $(document).on('mouseout', '.list-box', function() {
+//   $(this).find('.btn-delete-list').addClass('hidden');
+//   $(this).find('.btn-collaborator').addClass('hidden');
+//   $(this).find('.btn-color').addClass('hidden');
+//   $(this).find('.delete-item').addClass('hidden');
+//   $(this).find('.edit-item').addClass('hidden');
+// });
+
+var page = 2;
+
+$(window).scroll(function(event) {
+  event.stopPropagation();
+
+  if ($(window).scrollTop() >= $(document).height() - $(window).height()) {
+    $.ajax({
+      url: '<%=Rails.application.routes.url_helpers.paginate_lists_path%>',
+      type: 'get',
+      dataType: 'html',
+      data: { page: page },
+      success: function(response) {
+        var $lists = $('#lists');
+
+        $lists.append(response);
+        page += 1;
+
+        setupDropDown();
+        setupSideNav();
+        setupModal();
+      }
+    })
+  }
 });
 
 $(document).on('click', '.done', function() {
@@ -98,11 +139,28 @@ $(document).on('click', '.toast-action', function() {
   });
 });
 
-$(document).on('click', '.modal-trigger', function() {
-  // var id  = $(this).closest('.list').attr('id');
-  // var url = $(this).attr('href');
-  // $('.modal-content').load(url + "?id=" + id);
-  $('#modal-list').modal('open');
+function adicionarColaborador(list_id) {
+  var url = "/lists/" + list_id + "/edit";
+
+  $('.modal-content').load(url);
+}
+
+$(document).on('submit', '.search', function(e) {
+  e.preventDefault();
+
+  var keyword = $('#search').val();
+  
+  $.ajax({
+    type: "get",
+    url: "<%=Rails.application.routes.url_helpers.search_lists_path%>",
+    data: { keyword: keyword },
+    dataType: "html",
+    success: function (response) {
+      $('#lists').hide();
+      $('#lists').html(response);
+      $('#lists').fadeIn(300);
+    }
+  });
 });
 
 function rollback(list_id) {
@@ -165,14 +223,15 @@ function processHtml(data) {
 }
 
 function setupDropDown() {
-  $('.dropdown-button').dropdown({
-    hover:       true,
-    belowOrigin: true
-  });
+  $('.dropdown-button').dropdown();
 }
 
 function setupSideNav() {
   $(".button-collapse").sideNav();
+}
+
+function setupModal() {
+  $('.modal').modal();
 }
 
 function flash(text) {

@@ -7,6 +7,12 @@ class ListsController < ApplicationController
     collection
   end
 
+  def paginate
+    collection
+
+    render partial: 'lists', layout: false
+  end
+
   def item_update
     item  = Item.find(params[:item_id])
     item.done = params[:done]
@@ -42,6 +48,7 @@ class ListsController < ApplicationController
   end
 
   def edit
+    render layout: false
   end
 
   def create
@@ -92,6 +99,12 @@ class ListsController < ApplicationController
     render partial: 'list', locals: { list: @list }, layout: false
   end
 
+  def search
+    collection
+
+    render partial: 'lists', layout: false
+  end
+
   private
     def collection
       search = params[:keyword].present? ? params[:keyword] : nil
@@ -102,10 +115,9 @@ class ListsController < ApplicationController
               user: current_user.id,
               status:  true 
             },
-            order: [
-              { complete: :asc },
-              { date: :desc }
-            ]
+            order: { date: :desc },
+            page: params[:page],
+            per_page: 10
           )
       else
         select_lists
@@ -116,8 +128,9 @@ class ListsController < ApplicationController
       @lists = List.includes(:items)
                    .my_notes(current_user)
                    .status(true)
-                   .order('items.done asc', 
-                          'lists.created_at desc')
+                   .order('lists.created_at desc')
+                   .page(params[:page])
+                   .per(10)
     end
 
     def set_list
