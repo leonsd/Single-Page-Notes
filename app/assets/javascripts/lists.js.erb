@@ -49,8 +49,9 @@ $(window).scroll(function(event) {
 
 $(document).on('click', '.done', function() {
   var item_id;
-  var item = $(this).closest('.row');
-  var done = $(this).prop('checked') ? true : false;
+  var list_id = $(this).closest('.list').prop('id');
+  var $items  = $(this).closest('.items');
+  var done    = $(this).prop('checked') ? true : false;
 
   if ($(this).prop('type') === 'checkbox') {
     item_id = $(this).val();
@@ -63,18 +64,20 @@ $(document).on('click', '.done', function() {
     type: 'get',
     dataType: 'html',
     data: { item_id: item_id,
+            list_id: list_id,
             done: done
           },
     success: function (response) {
-      $("#lists").html(response);
+      $items.html(response);
       setupDropDown();  
     }
   });
 });
 
 $(document).on('click', '.color', function() {
+  var list    = $(this).closest('.list').closest('.row')
   var list_id = $(this).attr('id');
-  var color = $(this).find('a').attr('id');
+  var color   = $(this).find('a').attr('id');
 
   $.ajax({
     url: '<%=Rails.application.routes.url_helpers.color_update_lists_path%>',
@@ -84,7 +87,7 @@ $(document).on('click', '.color', function() {
             color: color 
           },
     success: function (response) {
-      $("#lists").html(response);
+      $(list).html(response);
       setupDropDown(); 
     }
   });
@@ -209,14 +212,10 @@ function apagarLista(element, list_id) {
 }
 
 function processHtml(data) {
-  var div = $('.list').closest('.row');
-  if ($(div).length == 0) {
-    div = $('#lists').find('.row');
-    div.prepend("<div id='' class='list'></div>");
-    div = $('.list').closest('.row');
-  } 
+  var $row = "<div class='row'></div>"
+  $('#lists').prepend($row);
 
-  $(div).prepend(data);
+  $('#lists > .row:first').html(data);
   $('.list:first').hide().fadeIn(300);
   setupDropDown();
   flash('Lista Criada!');
@@ -269,7 +268,7 @@ function viewNotes() {
     url: "<%=Rails.application.routes.url_helpers.notes_lists_path%>",
     dataType: "html",
     success: function (response) {
-      $('#notes').html(response);
+      $('.container-fluid').html(response);
       setupDropDown();
     }
   });

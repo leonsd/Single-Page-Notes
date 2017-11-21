@@ -14,13 +14,16 @@ colors = [
             'yellow'
          ]
 
-10000.times do |t|
+user = User.create(email: 'leon.sdsilva@gmail.com', password: '123456', password_confirmation: '123456');
+user = User.create(email: 'luan.patrick@gmail.com', password: '123456', password_confirmation: '123456');
+
+20000.times do |t|
   list = List.new
   list.title = t.odd? ? Faker::DragonBall.character : Faker::OnePiece.character
   list.color = colors[rand(0..5)]
-  list.user_id = 1
+  list.user_id = rand(1..2)
 
-  rand(2..6).times do |tt|
+  rand(2..5).times do |tt|
     list.items.build(description: Faker::Lorem.sentence(3))
   end
 

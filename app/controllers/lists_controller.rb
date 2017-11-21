@@ -17,20 +17,22 @@ class ListsController < ApplicationController
     item  = Item.find(params[:item_id])
     item.done = params[:done]
     item.save!
+
+    list = List.find(params[:list_id])
  
     select_lists
 
-    render partial: 'lists', layout: false
+    render partial: 'items', locals: { list: list }, layout: false
   end
 
   def color_update
-    list = List.find(params[:list_id].to_i)
+    list = List.find(params[:list_id])
     list.color = params[:color]
     list.save!
 
     select_lists
 
-    render partial: 'lists', layout: false
+    render partial: 'list', locals: { list: list }, layout: false
   end
 
   def delete_item
@@ -52,8 +54,7 @@ class ListsController < ApplicationController
   end
 
   def create
-    @list = List.new(list_params)
-    @list.user_id = current_user.id
+    @list = List.new(list_params.merge(user: current_user))
 
     if @list.save
       list = List.where(user_id: current_user.id).last

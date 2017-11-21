@@ -1,0 +1,39 @@
+<div id="login">
+  <%= simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+    <div class="row">
+      <div class="col s12">
+        <h5 class='grey-text center-align'><strong>Faça login com sua conta de site</strong></h5>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s12">
+        <%= f.input :email, label: 'E-mail', required: false, autofocus: true, input_html: { id: 'modal-email' } %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s12">
+        <%= f.input :password, label: 'Senha', required: false, input_html: { id: 'modal-senha' } %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s4">
+        <%= f.input :remember_me, as: :boolean, boolean_style: :inline if devise_mapping.rememberable? %>
+      </div>
+      <div class="col s4 offset-s4">
+        <%= link_to "Perdeu sua senha?", new_password_path(resource_name), class: 'right ' %>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col s12">
+        <%= f.button :submit, "Entrar", class: 'btn amber lighten-1' %>
+      </div>
+    </div>
+  <% end %>
+  <div class="row shared center-align">
+    <div class="col l10 m8 s6 offset-l1 offset-m2 offset-s2">
+      <span>Ainda não é membro?</span>
+    <%= link_to "Registrar agora", new_registration_path(resource_name), class: 'deep-orange-text text-darken-3' %>
+    </div>
+  </div>
+</div>
