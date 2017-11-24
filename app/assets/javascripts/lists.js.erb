@@ -25,6 +25,8 @@ $(document).ready(function() {
 var page = 2;
 
 $(window).scroll(function(event) {
+  var keyword = $('#search').val();
+
   event.stopPropagation();
 
   if ($(window).scrollTop() >= $(document).height() - $(window).height()) {
@@ -32,7 +34,10 @@ $(window).scroll(function(event) {
       url: '<%=Rails.application.routes.url_helpers.paginate_lists_path%>',
       type: 'get',
       dataType: 'html',
-      data: { page: page },
+      data: { 
+              page: page,
+              keyword: keyword
+            },
       success: function(response) {
         var $lists = $('#lists');
 
@@ -167,13 +172,16 @@ $(document).on('submit', '.search', function(e) {
 });
 
 function rollback(list_id) {
+  var $row = "<div class='row'></div>"
+
   $.ajax({
     url: "<%=Rails.application.routes.url_helpers.rollback_list_lists_path%>",
     type: "get",
     dataType: "html",
     data: { list_id: list_id },
     success: function (response) {
-      $('#lists > .row').prepend(response);
+      $('#lists').prepend($row);
+      $('#lists > .row:first').prepend(response);
     }
   });
 }
@@ -204,7 +212,7 @@ function apagarLista(element, list_id) {
 
     if (response) {
       $($list).fadeOut(300, function() { 
-        $(this).remove();
+        $(this).closest('.row').remove();
         flashWithAction('Lista Apagada!', list_id)
       });
     }

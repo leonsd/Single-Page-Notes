@@ -111,7 +111,7 @@ class ListsController < ApplicationController
       search = params[:keyword].present? ? params[:keyword] : nil
 
       if search
-        @lists = List.search(search,
+        @lists = List.search(search, fields: [:title],
             where: { 
               user: current_user.id,
               status:  true 
