@@ -5,8 +5,12 @@
       <%= label_tag "done-#{item.id}", item.description, class: item.done ? 'black-text complete' : 'black-text' %>
     </div>
     <div class="col s3">
-      <%= link_to material_icon.delete.md_18, '#', id: item.id, class: 'right red-text delete-item' %>
-      <%= link_to material_icon.edit.md_18, '#', id: item.id, class: 'right blue-text edit-item' %>
+      <span class='sp-no-l sp-del-i right red-text' data-item-id='<%= item.id %>'>
+        <%= material_icon.delete.md_18 %>
+      </span>
+      <span class='sp-no-l sp-edit-i right blue-text' data-item-id='<%= item.id %>'>
+        <%= material_icon.edit.md_18 %>
+      </span>
     </div>
   </div>
 <% end %>

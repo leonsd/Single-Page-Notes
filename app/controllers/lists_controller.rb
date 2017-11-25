@@ -19,8 +19,6 @@ class ListsController < ApplicationController
     item.save!
 
     list = List.find(params[:list_id])
- 
-    select_lists
 
     render partial: 'items', locals: { list: list }, layout: false
   end
@@ -30,8 +28,6 @@ class ListsController < ApplicationController
     list.color = params[:color]
     list.save!
 
-    select_lists
-
     render partial: 'list', locals: { list: list }, layout: false
   end
 
@@ -39,9 +35,9 @@ class ListsController < ApplicationController
     item = Item.find(params[:item_id].to_i)
     item.destroy
 
-    select_lists
+    list = List.find(item.list_id)
 
-    render partial: 'lists', layout: false
+    render partial: 'items', locals: { list: list }, layout: false
   end
 
   def new

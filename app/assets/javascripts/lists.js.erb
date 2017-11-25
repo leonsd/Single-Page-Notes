@@ -6,28 +6,15 @@ $(document).ready(function() {
   setupModal();
 });
 
-// $(document).on('mouseover', '.list-box', function() {
-//   $(this).find('.btn-delete-list').removeClass('hidden');
-//   $(this).find('.btn-collaborator').removeClass('hidden');
-//   $(this).find('.btn-color').removeClass('hidden');
-//   $(this).find('.delete-item').removeClass('hidden');
-//   $(this).find('.edit-item').removeClass('hidden');
-// });
-
-// $(document).on('mouseout', '.list-box', function() {
-//   $(this).find('.btn-delete-list').addClass('hidden');
-//   $(this).find('.btn-collaborator').addClass('hidden');
-//   $(this).find('.btn-color').addClass('hidden');
-//   $(this).find('.delete-item').addClass('hidden');
-//   $(this).find('.edit-item').addClass('hidden');
-// });
-
 var page = 2;
 
 $(window).scroll(function(event) {
   var keyword = $('#search').val();
 
   event.stopPropagation();
+  console.log("Window ScrolTop "+$(window).scrollTop());
+  console.log("Document Height "+$(document).height());
+  console.log("Window Height "+$(window).height());
 
   if ($(window).scrollTop() >= $(document).height() - $(window).height()) {
     $.ajax({
@@ -98,8 +85,31 @@ $(document).on('click', '.color', function() {
   });
 });
 
-$(document).on('click', '.delete-item', function() {
-  var item_id = $(this).attr('id');
+$(document).on('click', '.sp-del-l', function() {
+  var $el      = $(this);
+  var list_id = $(this).data('list-id');
+
+  $.ajax({
+    url: '<%=Rails.application.routes.url_helpers.list_destroy_lists_path%>',
+    type: 'get',
+    dataType: 'json',
+    data: { list_id: list_id },
+    success: function(response) {
+      var $list = $el.closest('.list');
+  
+      if (response) {
+        $($list).fadeOut(300, function() { 
+          $(this).closest('.row').remove();
+          flashWithAction('Lista Apagada!', list_id)
+        });
+      }
+    }
+  })
+});
+
+$(document).on('click', '.sp-del-i', function() {
+  var item_id = $(this).data('item-id');
+  var $items  = $(this).closest('.items');
 
   $.ajax({
     url: '<%=Rails.application.routes.url_helpers.delete_item_lists_path%>',
@@ -107,7 +117,8 @@ $(document).on('click', '.delete-item', function() {
     dataType: 'html',
     data: { item_id: item_id },
     success: function (response) {
-      $("#lists").html(response);
+      $items.html(response);
+      // $("#lists").html(response);
       setupDropDown();
       flash('Item Apagado!'); 
     }
@@ -128,10 +139,11 @@ $(document).on('keyup', '.js-description', function() {
   var input         = $(this).attr('id');
   var description   = $(this).val();
   var $inputControl = $('.js-description');
+  var $last         = $('.js-description:last');
 
   if (description.length > 0 && control != input) {
     control = input;
-    $add.click();
+    if ($last.val() != '') { $add.click(); }
   } else if (description.length == 0 && $inputControl.length > 1 && control == input) {
     var remove = $(this).closest('.nested-fields').find('.js-remove');
     
@@ -198,25 +210,6 @@ function adicionarLista() {
   
     return limparForm();
   }
-}
-
-function apagarLista(element, list_id) {
-  $.ajax({
-    url: '<%=Rails.application.routes.url_helpers.list_destroy_lists_path%>',
-    type: 'get',
-    dataType: 'json',
-    data: { list_id: list_id },
-  })
-  .done(function(response) {
-    var $list = element.closest('.list');
-
-    if (response) {
-      $($list).fadeOut(300, function() { 
-        $(this).closest('.row').remove();
-        flashWithAction('Lista Apagada!', list_id)
-      });
-    }
-  });
 }
 
 function processHtml(data) {

@@ -18,7 +18,7 @@
                 <%= link_to material_icon.menu.md_24, '#', class: 'menu button-collapse grey-text text-darken-3', data: { activates: 'slide-out' } %>
                 <%= link_to "SP Notes", root_path, class: 'brand-logo grey-text text-darken-3' %>
               </div>
-              <div class="col s6 m4 l4 offset-s2 offset-m2 offset-l2">
+              <div class="col s5 m4 l4 offset-s2 offset-m2 offset-l2">
                 <%= form_tag(lists_path, method: :get, class: 'search') do %>
                   <div class="input-field">
                     <%= search_field_tag :keyword, params[:keyword], id: 'search', placeholder: 'Pesquisar', autocomplete: 'off' %>
