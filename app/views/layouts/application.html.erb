@@ -3,6 +3,7 @@
   <head>
     <title>Single Page Notes</title>
     <%= csrf_meta_tags %>
+    <%= Gon::Base.render_data %>
 
     <%= stylesheet_link_tag    'application', media: 'all' %>
     <%= javascript_include_tag 'application' %>

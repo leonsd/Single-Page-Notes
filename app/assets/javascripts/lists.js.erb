@@ -12,9 +12,6 @@ $(window).scroll(function(event) {
   var keyword = $('#search').val();
 
   event.stopPropagation();
-  console.log("Window ScrolTop "+$(window).scrollTop());
-  console.log("Document Height "+$(document).height());
-  console.log("Window Height "+$(window).height());
 
   if ($(window).scrollTop() >= $(document).height() - $(window).height()) {
     $.ajax({
@@ -118,7 +115,6 @@ $(document).on('click', '.sp-del-i', function() {
     data: { item_id: item_id },
     success: function (response) {
       $items.html(response);
-      // $("#lists").html(response);
       setupDropDown();
       flash('Item Apagado!'); 
     }
@@ -149,6 +145,7 @@ $(document).on('keyup', '.js-description', function() {
     
     control = input;
     remove.click();
+    $last.focus();
   }
 });
 
@@ -158,12 +155,6 @@ $(document).on('click', '.toast-action', function() {
     $(this).remove();
   });
 });
-
-function adicionarColaborador(list_id) {
-  var url = "/lists/" + list_id + "/edit";
-
-  $('.modal-content').load(url);
-}
 
 $(document).on('submit', '.search', function(e) {
   e.preventDefault();
@@ -183,8 +174,47 @@ $(document).on('submit', '.search', function(e) {
   });
 });
 
+$(document).on('focusin', '.js-name-collaborator', function() {
+  var $input = $(this);
+
+  $.ajax({
+    type: "get",
+    url: "<%=Rails.application.routes.url_helpers.search_users_lists_path%>",
+    dataType: "json",
+    success: function (response) {
+      autoComplete(response, $input); 
+    }
+  });
+})
+
+function modalColaborador(list_id) {
+  var url    = "/lists/add_collaborators?id=" + list_id;
+  var $modal = $('.modal-body');
+
+  $modal.load(url);
+}
+
+function adicionarColaborador() {
+  var $collaborator = $('.js-name-collaborator');
+
+  // ***** REFATORAR VALIDAÇÃO PARA SALVAR AS LISTAS!!! *****
+  if (!($collaborator.length == 1 && $collaborator.val().trim() == "")) {
+    $('.modal-add-collaborator').ajaxSubmit({
+      dataType: 'html',
+      success: updateList
+    });
+  } else {
+    alert('error');
+  }
+}
+
+function updateList(data) {
+  console.log(data);
+  $('.modal').modal('close');
+}
+
 function rollback(list_id) {
-  var $row = "<div class='row'></div>"
+  var $row = "<div class='row hidden'></div>"
 
   $.ajax({
     url: "<%=Rails.application.routes.url_helpers.rollback_list_lists_path%>",
@@ -193,7 +223,7 @@ function rollback(list_id) {
     data: { list_id: list_id },
     success: function (response) {
       $('#lists').prepend($row);
-      $('#lists > .row:first').prepend(response);
+      $('#lists > .row:first').prepend(response).fadeIn(300);
     }
   });
 }
@@ -202,6 +232,7 @@ function adicionarLista() {
   var title        = $('.js-title').val();
   var $description = $('.js-description');
 
+  // ***** REFATORAR VALIDAÇÃO PARA SALVAR AS LISTAS!!! *****
   if (!(title.trim() == "" || ($description.length == 1 && $description.val().trim() == ""))) {
     $('#new_list').ajaxSubmit({
       dataType: 'html',
@@ -209,6 +240,8 @@ function adicionarLista() {
     });
   
     return limparForm();
+  } else {
+    alert('error');
   }
 }
 
@@ -218,31 +251,10 @@ function processHtml(data) {
 
   $('#lists > .row:first').html(data);
   $('.list:first').hide().fadeIn(300);
+  setupSideNav();
   setupDropDown();
+  setupModal();
   flash('Lista Criada!');
-}
-
-function setupDropDown() {
-  $('.dropdown-button').dropdown();
-}
-
-function setupSideNav() {
-  $(".button-collapse").sideNav();
-}
-
-function setupModal() {
-  $('.modal').modal();
-}
-
-function flash(text) {
-  Materialize.toast(text, 4000)
-}
-
-function flashWithAction(text, id) {
-  var $button       = '<button class="btn-flat toast-action" onclick="rollback('+ id +')">Desfazer</button>';
-  var $toastContent = $('<span>'+ text +'</span>').add($($button));
-
-  Materialize.toast($toastContent, 4000);
 }
 
 function limparForm() {
@@ -270,22 +282,61 @@ function viewNotes() {
     dataType: "html",
     success: function (response) {
       $('.container-fluid').html(response);
+      setupSideNav();
       setupDropDown();
+      setupModal();
     }
   });
 }
 
 function viewTrash(button) {
-  $('#notes').load($(button).attr('href'));
-  setupDropDown();
+  $.ajax({
+    type: "get",
+    url: "<%=Rails.application.routes.url_helpers.trash_lists_path%>",
+    dataType: "html",
+    success: function (response) {
+      $('#notes').html(response);
+      setupSideNav();
+      setupDropDown();
+      setupModal();
+    }
+  });
+}
 
-  // $.ajax({
-  //   type: "get",
-  //   url: "<%=Rails.application.routes.url_helpers.trash_lists_path%>",
-  //   dataType: "html",
-  //   success: function (response) {
-  //     $('#notes').html(response);
-  //     setupDropDown();
-  //   }
-  // });
+function autoComplete(users, $input) {
+  $input.autocomplete({
+    data: { 
+      "leon.sdsilva@gmail.com": null,
+      "luan.patrick@gmail.com": null,
+      "vagner.grizoste@gmail.com": null
+    },
+    limit: 20,
+    onAutocomplete: function(val) {
+      console.log(val);
+    },
+    minLength: 2,
+  });
+}
+
+function setupDropDown() {
+  $('.dropdown-button').dropdown();
+}
+
+function setupSideNav() {
+  $(".button-collapse").sideNav();
+}
+
+function setupModal() {
+  $('.modal').modal();
+}
+
+function flash(text) {
+  Materialize.toast(text, 4000)
+}
+
+function flashWithAction(text, id) {
+  var $button       = '<button class="btn-flat toast-action" onclick="rollback('+ id +')">Desfazer</button>';
+  var $toastContent = $('<span>'+ text +'</span>').add($($button));
+
+  Materialize.toast($toastContent, 4000);
 }

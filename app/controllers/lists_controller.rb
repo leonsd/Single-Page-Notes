@@ -1,6 +1,6 @@
 class ListsController < ApplicationController
   respond_to :html, :js, :json
-  before_action :set_list, only: [:edit, :update]
+  before_action :set_list, only: [:add_collaborators, :edit, :update]
 
   def index
     new
@@ -59,7 +59,20 @@ class ListsController < ApplicationController
     end
   end
 
+  def add_collaborators
+    render partial: 'colaboradores', layout: false
+  end
+
+  def search_users
+    render json: User.pluck(:email)
+  end
+
   def update
+    if @list.update_attributes(list_params)
+      list = List.where(user_id: current_user.id).last
+      
+      render partial: 'list', locals: { list: list }, layout: false
+    end
   end
 
   def notes
@@ -71,12 +84,13 @@ class ListsController < ApplicationController
 
   def trash
     @lists = List.includes(:items)
-                 .my_notes(current_user)
+                 .eager_load(:collaborators)
+                 .my_or_shared(current_user)
                  .status(false)
-                 .order('items.done', 
-                        'items.description asc',
-                        'lists.created_at desc')
-    
+                 .order('lists.created_at desc')
+                 .page(params[:page])
+                 .per(10)
+
     render partial: 'lists', layout: false
   end
 
@@ -123,7 +137,8 @@ class ListsController < ApplicationController
 
     def select_lists
       @lists = List.includes(:items)
-                   .my_notes(current_user)
+                   .eager_load(:collaborators)
+                   .my_or_shared(current_user)
                    .status(true)
                    .order('lists.created_at desc')
                    .page(params[:page])
@@ -135,6 +150,6 @@ class ListsController < ApplicationController
     end
 
     def list_params
-      params.require(:list).permit(:title, :color, items_attributes: [:id, :description, :done, :_destroy])
+      params.require(:list).permit(:title, :color, items_attributes: [:id, :description, :done, :_destroy], collaborators_attributes: [:user_id, :_destroy])
     end
 end

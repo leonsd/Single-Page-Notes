@@ -18,7 +18,7 @@
       </div>
       <div class="list-footer">
         <div class="row">
-          <%= link_to material_icon.plus_one.md_18, "#modal-list", onclick: "adicionarColaborador(#{list.id})", remote: true, class: 'modal-trigger btn-collaborator grey-text text-darken-2', data: { toggle: 'tooltip', title: 'Adicionar Colaborador'} %>
+          <%= link_to material_icon.plus_one.md_18, "#modal-list", onclick: "modalColaborador(#{list.id})", remote: true, class: 'modal-trigger btn-collaborator grey-text text-darken-2', data: { toggle: 'tooltip', title: 'Adicionar Colaborador'} %>
           <%= link_to material_icon.color_lens.md_18, '#', class: 'dropdown-button btn-color grey-text text-darken-2', data: { toggle: 'tooltip', tooltip: 'Alterar cor', position: 'left', delay: '25', activates: "dropdown-color-#{list.id}", beloworigin: 'true' } %>
           <ul id="dropdown-color-<%= list.id %>" class='dropdown-content'>
             <li id="<%= list.id %>" class="item color">

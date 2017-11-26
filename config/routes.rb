@@ -9,14 +9,16 @@ Rails.application.routes.draw do
   resources :users
   
   resources :lists do
-    get 'paginate',      on: :collection
-    get 'list_destroy',  on: :collection
-    get 'rollback_list', on: :collection
-    get 'item_update',   on: :collection
-    get 'color_update',  on: :collection
-    get 'delete_item',   on: :collection
-    get 'notes',         on: :collection
-    get 'trash',         on: :collection
-    get 'search',        on: :collection
+    get 'paginate',          on: :collection
+    get 'list_destroy',      on: :collection
+    get 'rollback_list',     on: :collection
+    get 'item_update',       on: :collection
+    get 'color_update',      on: :collection
+    get 'delete_item',       on: :collection
+    get 'add_collaborators', on: :collection
+    get 'search_users',      on: :collection  
+    get 'notes',             on: :collection
+    get 'trash',             on: :collection
+    get 'search',            on: :collection
   end
 end

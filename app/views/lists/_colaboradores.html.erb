@@ -1,0 +1,15 @@
+<%= simple_form_for(@list, remote: true, html: { class: 'modal-add-collaborator' }) do |f| %>
+  <%= f.error_notification %>
+
+  <div id="collaborators">
+    <%= f.simple_fields_for :collaborators do |collaborator| %>
+      <%= render partial: 'collaborator_fields', locals: { f: collaborator } %>
+    <% end %>
+    <div class="links">
+      <%= link_to_add_association 'Adicionar', f, :collaborators, class: 'js-add-collaborador' %>
+    </div>
+  </div>
+  <div class="row">
+    <%= link_to 'Adicionar', '#', onclick: 'adicionarColaborador()', class: 'btn waves-effect waves-light blue darken-2 right' %>
+  </div>
+<% end %>
